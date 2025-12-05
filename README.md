@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dreamhack Stats Badge
 
-## Getting Started
+I built this little tool to generate a dynamic SVG badge of my Dreamhack stats (Level, CTF Tier, Wargame Points, etc.) so I could display it on my GitHub profile.
 
-First, run the development server:
+It runs on Vercel Edge Functions and uses next/og to style the badge. Since Dreamhack doesn't have a public API for these specific stats, this script fetches my public profile page and extracts the data directly from the HTML.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## How to use it
+
+### 1. Set your User ID
+
+You need to point this to your own profile.
+
+1. Go to your Dreamhack profile page and check the URL.
+
+- Example: https://dreamhack.io/users/12345/ -> 12345 is your ID.
+
+2. Open `app/api/badge/route.jsx`.
+
+3. Change the `userId` variable at the top of the function:
+
+```javascript
+export async function GET(req) {
+  const userId = "YOUR_ID_HERE"; // <--- Put your ID here
+  const targetUrl = `https://dreamhack.io/users/${userId}/`;
+
+  // ...
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Deploy
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+The easiest way to host this is on Vercel.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push this code to a GitHub repository.
+2. Go to Vercel and create a new project from that repo.
+3. It should auto-detect it's a Next.js app. Just hit deploy.
 
-## Learn More
+### 3. Add to your Profile
 
-To learn more about Next.js, take a look at the following resources:
+Once it's deployed, you can use the link in your GitHub README.md or any HTML page.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Markdown:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```md
+![Dreamhack Stats](https://your-project-name.vercel.app/api/my-badge)
+```
 
-## Deploy on Vercel
+HTML:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```html
+<img
+  src="https://your-project-name.vercel.app/api/my-badge"
+  alt="Dreamhack Stats"
+/>
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Local Testing
+
+If you want to tweak the design locally:
+
+```bash
+npm install
+npm run dev
+```
+
+Then visit `http://localhost:3000/api/my-badge`.
+
+## Example Badge
+
+![Example badge](./public/example-badge.png)
